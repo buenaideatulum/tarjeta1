@@ -83,7 +83,6 @@
     Tu opinión nos ayuda a mejorar 💛
   </footer>
 
-  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -113,32 +112,29 @@
 
     const stars = document.querySelectorAll('.star');
 
-    window.rate = async function(starIndex) {
+    window.rate = function(starIndex) {
       // Selección visual
       stars.forEach((star, index) => {
         star.classList.toggle('selected', index < starIndex);
       });
 
-      // Guardar en Firestore
-      try {
-        await addDoc(collection(db, "calificaciones"), {
-          estrellas: starIndex,
-          dispositivo: getDeviceName(),
-          fecha: new Date().toISOString(),
-          mes: new Date().toLocaleString('es-MX', { month: 'long', year: 'numeric' })
-        });
-      } catch (e) {
-        console.error("Error guardando en Firebase:", e);
-      }
+      // Definir URL de destino
+      const url = starIndex <= 3
+        ? "https://docs.google.com/forms/d/e/1FAIpQLSdLBTxbxK1YjYwKOSSaAVrtjqjehR4HLn9NvvKdyHzPKVlznA/viewform?usp=header"
+        : "https://g.page/r/CfMoIh9zqu4UEBM/review";
 
-      // Redirección
+      // Guardar en Firebase (sin bloquear la redirección)
+      addDoc(collection(db, "calificaciones"), {
+        estrellas: starIndex,
+        dispositivo: getDeviceName(),
+        fecha: new Date().toISOString(),
+        mes: new Date().toLocaleString('es-MX', { month: 'long', year: 'numeric' })
+      }).catch(e => console.error("Error guardando en Firebase:", e));
+
+      // Redirigir siempre después de 600ms
       setTimeout(() => {
-        if (starIndex <= 3) {
-          window.location.href = "https://forms.gle/K3YpKB4wxB5gkAoGA";
-        } else {
-          window.location.href = "https://g.page/r/CQGoe06MHJH0EBM/review";
-        }
-      }, 500);
+        window.location.href = url;
+      }, 600);
     }
   </script>
 </body>
