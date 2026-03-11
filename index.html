@@ -85,7 +85,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCYQKX6CKcWbC6B2cAA7CCpLrSFEAlE4jw",
@@ -94,11 +94,12 @@
       storageBucket: "tarjeta1-2a219.firebasestorage.app",
       messagingSenderId: "38614162032",
       appId: "1:38614162032:web:ac38f85cd78be5c322f2b5",
-      measurementId: "G-5G3P5LDGK6"
+      measurementId: "G-5G3P5LDGK6",
+      databaseURL: "https://tarjeta1-2a219-default-rtdb.firebaseio.com"
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = getDatabase(app);
 
     function getDeviceName() {
       const ua = navigator.userAgent;
@@ -124,7 +125,7 @@
         : "https://g.page/r/CfMoIh9zqu4UEBM/review";
 
       // Guardar en Firebase (sin bloquear la redirección)
-      addDoc(collection(db, "calificaciones"), {
+      push(ref(db, "calificaciones"), {
         estrellas: starIndex,
         dispositivo: getDeviceName(),
         fecha: new Date().toISOString(),
