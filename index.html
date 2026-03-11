@@ -128,8 +128,8 @@
       push(ref(db, "calificaciones"), {
         estrellas: starIndex,
         dispositivo: getDeviceName(),
-        fecha: new Date().toISOString(),
-        mes: new Date().toLocaleString('es-MX', { month: 'long', year: 'numeric' })
+        fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
+        mes: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City', month: 'long', year: 'numeric' })
       }).catch(e => console.error("Error guardando en Firebase:", e));
 
       // Redirigir siempre después de 600ms
